@@ -8,14 +8,36 @@
 
 import UIKit
 
+final class GLXNavigationController: UINavigationController {
+    
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    lazy var navC:GLXNavigationController = {
+        let navC = GLXNavigationController()
+        navC.restorationIdentifier = "navC"
+        return navC
+    }()
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UILabel.appearance(whenContainedInInstancesOf: [UIViewController.self]).font = UIFont.systemFont(ofSize: 12)
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        UILabel.appearance(whenContainedInInstancesOf: [UITableViewCell.self]).font = UIFont.systemFont(ofSize: 12)
+        UINavigationBar.appearance(whenContainedInInstancesOf: [GLXNavigationController.self]).isTranslucent = false
+        window?.rootViewController = navC
+        return true
+    }
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        if navC.viewControllers.count == 0 {
+            let vc = ViewController()
+            navC.viewControllers = [vc]
+        }
+        window?.makeKeyAndVisible()
         return true
     }
     
@@ -28,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, viewControllerWithRestorationIdentifierPath identifierComponents: [String], coder: NSCoder) -> UIViewController? {
-        return nil
+        return navC
     }
 
 }
